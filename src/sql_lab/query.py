@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 def _connect():
+    """Open a MySQL connection using env vars."""
     return mysql.connector.connect(
         host=os.environ["DBHOST"],
         user=os.environ["DBUSER"],
@@ -17,6 +18,7 @@ def _connect():
 
 
 def get_data_by_group(value):
+    """Return rows from mock where the group column equals value."""
     logger.info("Querying group = %s", value)
     conn = _connect()
     cursor = conn.cursor()
@@ -32,6 +34,7 @@ def get_data_by_group(value):
 
 
 def plot_counts(groupby):
+    """Count rows per distinct value of a column."""
     logger.info("Counting by %s", groupby)
     allowed = {"id", "group", "last_name", "email", "gender", "ip_address"}
     if groupby not in allowed:
@@ -46,6 +49,7 @@ def plot_counts(groupby):
 
 
 def main():
+    """Run the query demos."""
     print("Rows in group B:")
     for row in get_data_by_group("B"):
         print(row)
