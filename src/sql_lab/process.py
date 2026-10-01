@@ -19,12 +19,14 @@ TYPE_MAPPING = {
 
 
 def read_data(filename):
+    """Load the CSV into a DataFrame."""
     df = pd.read_csv(filename)
     logger.info("Read %d rows", len(df))
     return df
 
 
 def clean_data(data):
+    """Remove rows with missing values."""
     before = len(data)
     data = data.dropna().reset_index(drop=True)
     logger.info("Cleaned %d -> %d", before, len(data))
@@ -32,10 +34,12 @@ def clean_data(data):
 
 
 def _mysql_type_for(dtype):
+    """Map pandas dtype to a MySQL type."""
     return TYPE_MAPPING.get(str(dtype), "VARCHAR(255)")
 
 
 def load_data(data, table):
+    """Create the table and insert every row."""
     host = os.environ["DBHOST"]
     user = os.environ["DBUSER"]
     password = os.environ["DBPASS"]
@@ -67,6 +71,7 @@ def load_data(data, table):
 
 
 def main():
+    """Read, clean, and load MOCK_DATA.csv into mock."""
     df = read_data("MOCK_DATA.csv")
     df = clean_data(df)
     load_data(df, "mock")
